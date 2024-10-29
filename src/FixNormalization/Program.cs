@@ -1,4 +1,5 @@
 using Spectre.Console.Cli;
+using Spectre.Console.Cli.Internal.Configuration;
 using FixNormalization.Commands;
 using FixNormalization.Settings;
 
@@ -22,6 +23,7 @@ public static class Program
                 .WithExample(["fix", "path", "--recurse"]);
             // Add hidden option; this could be included by using diff tool.
         });
+
 
         return app.Run(args);
     }
