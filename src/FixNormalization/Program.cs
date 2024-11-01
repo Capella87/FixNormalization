@@ -1,30 +1,29 @@
-using Spectre.Console.Cli;
-using Spectre.Console.Cli.Internal.Configuration;
 using FixNormalization.Commands;
 using FixNormalization.Settings;
+using System.CommandLine.Builder;
+using System.CommandLine.Parsing;
+using System.CommandLine.IO;
+using System.CommandLine;
 
 namespace FixNormalization;
 
 public static class Program
 {
-    public static int Main(string[] args)
+    public static async Task<int> Main(string[] args)
     {
-        var app = new CommandApp();
+        var rootCommand = new RootCommand("Fix Unicode Normalization of each files");
 
-        app.Configure(config =>
-        {
-            config.SetApplicationName("fnorm");
-
-            // Add fix command and its options
-            config.AddCommand<FixCommand>("fix")
-                .WithDescription("Fix Unicode normalization problem in target's filename.")
-                .WithExample(["fix", "path"])
-                .WithExample(["fix", "path", "-r"])
-                .WithExample(["fix", "path", "--recurse"]);
-            // Add hidden option; this could be included by using diff tool.
-        });
-
-
-        return app.Run(args);
+        var builder = new CommandLineBuilder(rootCommand)
+            .UseRichVersionOption()
+            .UseHelp()
+            .UseEnvironmentVariableDirective()
+            .UseParseDirective()
+            .UseSuggestDirective()
+            .RegisterWithDotnetSuggest()
+            .UseTypoCorrections()
+            .UseParseErrorReporting()
+            .UseExceptionHandler()
+            .CancelOnProcessTermination();
+        return await builder.Build().InvokeAsync(args, new SpectreConsoleWrapper());
     }
 }
