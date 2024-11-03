@@ -49,7 +49,7 @@ public static class CommandLineBuilderExtensions
                 {
                     // TODO: Add Git commit hash and release date
                     // Workaround for now...
-                    AnsiConsole.MarkupLine($"[bold]FixNormalization[/] v{_appAssemblyVersion.Value.EscapeMarkup()}");
+                    AnsiConsole.Markup($"[bold]FixNormalization[/] v{_appAssemblyVersion.Value.EscapeMarkup()} [yellow]{ThisAssembly.Git.Commit}[/]");
 
                     // context.Console.Out.WriteLine($"[bold]FixNormalization[/] v{_appAssemblyVersion.Value.EscapeMarkup()}");
                 }
