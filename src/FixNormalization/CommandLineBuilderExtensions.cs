@@ -10,14 +10,15 @@ namespace FixNormalization;
 
 public static class CommandLineBuilderExtensions
 {
+    private static readonly Lazy<Assembly> _assembly = new(() => GetApplicationAssembly());
+
     private static readonly Lazy<string> _appAssemblyVersion = new(() =>
     {
-        var assembly = GetApplicationAssembly();
-        var assemblyVersionAttr = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+        var assemblyVersionAttr = _assembly.Value.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 
         if (assemblyVersionAttr is null)
         {
-            return assembly.GetName().Version?.ToString() ?? " Unknown";
+            return _assembly.Value.GetName().Version?.ToString() ?? " Unknown";
         }
         else
         {
