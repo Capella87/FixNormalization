@@ -54,8 +54,9 @@ public partial class FixCommand : AsyncCommandBase
 
                 case PathObjectTypes.NormalFile:
 
-                    if (!e.IsNormalized(NormalizationForm.FormC))
+                    if (!e.IsNormalized(NForm))
                     {
+                        // TODO: Show the file with not normalized filename to NForm in verbose mode
                         targetedFiles.Add(e);
                     }
                     else
