@@ -104,6 +104,8 @@ public partial class FixCommand : AsyncCommandBase
             // TODO: Silent option to skip showing results
             // TODO: Redirect it to file when user enabled log option.
 
+            // Temporary implementation
+            AnsiConsole.MarkupLine($"[blue]Success: {_successCount}[/], [red]Failed: {failed.Count}[/]");
         }
 
         return 0;
