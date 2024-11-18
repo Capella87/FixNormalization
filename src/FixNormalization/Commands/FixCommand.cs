@@ -4,21 +4,26 @@ using System.ComponentModel;
 using Ookii.CommandLine;
 using System.Text;
 using System.Security;
+using Ookii.CommandLine.Conversion;
 
 namespace FixNormalization.Commands;
 
 [GeneratedParser]
 [Command]
 [Description("Unify the Unicode normalization of files for compatibility.")]
+[ParseOptions(IsPosix = true,
+    CaseSensitive = true,
+    ArgumentNameTransform = NameTransform.DashCase,
+    ValueDescriptionTransform = NameTransform.DashCase)]
 public partial class FixCommand : AsyncCommandBase
 {
-    [CommandLineArgument("target", IsPositional = true, IsRequired = true, Position = 0)]
+    [CommandLineArgument("target", IsPositional = true, Position = 0)]
     [Description("Files or directories which contain files to be normalized.")]
     [ValueDescription("target")]
-    public required string[] Target { get; set; }
+    public required string[]? Target { get; set; }
 
     [CommandLineArgument("form", IsRequired = false, DefaultValue = NormalizationForm.FormC)]
-    [Description("Normalization form to be used. You can choose NFC (The most common types in majority of environments) and NFD (Used in macOS or Darwin)")]
+    [Description("Normalization form to be used. You can choose NFC (The most common types in the majority of environments) and NFD (Used in macOS or Darwin)")]
     [ValueDescription("form")]
     public NormalizationForm NForm { get; set; }
 
@@ -40,7 +45,6 @@ public partial class FixCommand : AsyncCommandBase
                 AnsiConsole.MarkupLine($"[red]Error:[/] Path '{e.EscapeMarkup()}' does not exist.");
                 continue;
             }
-
 
             switch (CheckPathObjectType(e))
             {
