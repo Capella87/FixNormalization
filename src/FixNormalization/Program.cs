@@ -13,9 +13,15 @@ public static class Program
         var appCommandOptions = new CommandOptions()
         {
             IsPosix = true,
-            AutoVersionArgument = false,
-            AutoVersionCommand = false,
-            AutoHelpArgument = true
+            AutoVersionArgument = true,
+            AutoVersionCommand = true,
+            AutoHelpArgument = true,
+            CommandNameTransform = NameTransform.DashCase,
+            UsageWriter = new UsageWriter()
+            {
+                IncludeAliasInDescription = true,
+                IncludeApplicationDescriptionBeforeCommandList = true,
+            }
         };
 
         var appCommandManager = new CommandManager(appCommandOptions);

@@ -5,6 +5,9 @@ using Ookii.CommandLine;
 using System.Text;
 using System.Security;
 using Ookii.CommandLine.Conversion;
+using Ookii.CommandLine.Validation;
+
+using FixNormalization.Validation;
 
 namespace FixNormalization.Commands;
 
@@ -17,7 +20,7 @@ namespace FixNormalization.Commands;
     ValueDescriptionTransform = NameTransform.DashCase)]
 public partial class FixCommand : AsyncCommandBase
 {
-    [CommandLineArgument("target", IsPositional = true, Position = 0)]
+    [CommandLineArgument("target", IsPositional = false, Position = 0)]
     [Description("Files or directories which contain files to be normalized.")]
     [ValueDescription("target")]
     public required string[]? Target { get; set; }
@@ -26,6 +29,9 @@ public partial class FixCommand : AsyncCommandBase
     [Description("Normalization form to be used. You can choose NFC (The most common types in the majority of environments) and NFD (Used in macOS or Darwin)")]
     [ValueDescription("form")]
     [ArgumentConverter(typeof(NormalizationFormConverter))]
+    [ValidateNormalizationForm(AllowNonDefinedValues = true,
+        IncludeInUsageHelp = true,
+        IncludeValuesInErrorMessage = true)]
     public NormalizationForm NForm { get; set; }
 
     private int _successCount = 0;
@@ -77,7 +83,7 @@ public partial class FixCommand : AsyncCommandBase
 
         if (targetedFiles.Count == 0)
         {
-            AnsiConsole.MarkupLine($"[red]Error: there's no such valid file to process.[/]");
+            AnsiConsole.MarkupLine($"[red]Error: there's no such valid file to normalize.[/]");
             return 22;
         }
 

@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 
+using FixNormalization.Validation;
+
 namespace FixNormalization;
 
 public sealed class NormalizationFormConverter : ArgumentConverter
@@ -16,23 +18,30 @@ public sealed class NormalizationFormConverter : ArgumentConverter
 
     public override object? Convert(string value, CultureInfo culture, CommandLineArgument argument)
     {
+        var attribute = argument.Validators.OfType<ValidateNormalizationFormAttribute>()!.FirstOrDefault();
+
         try
         {
             return ParseNormalizationForm(value);
         }
         catch (ArgumentNullException ex)
         {
-            throw new CommandLineArgumentException();
+            throw new CommandLineArgumentException(GetExceptionMessage(value, argument, attribute),
+                argument.ArgumentName,
+                CommandLineArgumentErrorCategory.ArgumentValueConversion,
+                ex);
         }
         catch (ArgumentException ex)
         {
-            throw new NotImplementedException();
+            throw new CommandLineArgumentException(GetExceptionMessage(value, argument, attribute),
+                argument.ArgumentName,
+                CommandLineArgumentErrorCategory.ArgumentValueConversion,
+                ex);
         }
     }
 
     internal static object? ParseNormalizationForm(string value)
     {
-
         ReadOnlySpan<char> lowered = value.ToLower().AsSpan();
 
         return (ReadOnlySpan<char> lowered) => lowered switch
@@ -43,5 +52,8 @@ public sealed class NormalizationFormConverter : ArgumentConverter
         };
     }
 
-    private GetExceptionMessage(string value, Exception? inner, CommandLineArgument argument, ValidationEnum)
+    private string GetExceptionMessage(string value, CommandLineArgument argument, ValidateNormalizationFormAttribute? attr)
+    {
+        return attr!.GetErrorMessage(argument, value) ?? argument.Parser.StringProvider.ValidateEnumValueFailed(argument.ArgumentName, typeof(NormalizationForm), value, true);
+    }
 }
