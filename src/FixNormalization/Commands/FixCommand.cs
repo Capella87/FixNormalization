@@ -25,6 +25,7 @@ public partial class FixCommand : AsyncCommandBase
     [CommandLineArgument("form", IsRequired = false, DefaultValue = NormalizationForm.FormC)]
     [Description("Normalization form to be used. You can choose NFC (The most common types in the majority of environments) and NFD (Used in macOS or Darwin)")]
     [ValueDescription("form")]
+    [ArgumentConverter(typeof(NormalizationFormConverter))]
     public NormalizationForm NForm { get; set; }
 
     private int _successCount = 0;
