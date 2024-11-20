@@ -1,3 +1,4 @@
+using FixNormalization.Arguments;
 using FixNormalization.Commands;
 using Ookii.CommandLine;
 using Ookii.CommandLine.Commands;
@@ -6,10 +7,11 @@ namespace FixNormalization;
 
 public static class Program
 {
+    private static RootArguments Arguments { get; set; }
+
     public static async Task<int> Main(string[] args)
     {
-        // var rootCommand = new RootCommand("Fix Unicode Normalization of each files");
-
+        // For subcommands
         var appCommandOptions = new CommandOptions()
         {
             IsPosix = true,
@@ -24,10 +26,28 @@ public static class Program
             }
         };
 
-        var appCommandManager = new CommandManager(appCommandOptions);
+        var appCommandManager = new AppCommandManager(appCommandOptions);
+
+        // TODO: Invoke without Microsoft.Extensions.Hosting (Generic Host)
+        // For root arguments
+        var rootParseOptions = new ParseOptions()
+        {
+            IsPosix = true,
+        };
+
+        var parser = RootArguments.CreateParser(rootParseOptions);
+        Arguments = parser.ParseWithErrorHandling();
+
+        if (Arguments == null)
+        {
+            return 1;
+        }
+
 
         var cts = new CancellationTokenSource();
 
-        return await appCommandManager.RunCommandAsync(cts.Token) ?? 1;
+        return await appCommandManager.RunCommandAsync(Arguments.Command,
+            parser.ParseResult.RemainingArguments,
+            cts.Token) ?? 1;
     }
 }
