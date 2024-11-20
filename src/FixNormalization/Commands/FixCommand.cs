@@ -8,6 +8,7 @@ using Ookii.CommandLine.Conversion;
 using Ookii.CommandLine.Validation;
 
 using FixNormalization.Validation;
+using System.IO.Abstractions;
 
 namespace FixNormalization.Commands;
 
@@ -36,6 +37,18 @@ public partial class FixCommand : AsyncCommandBase
 
     private int _successCount = 0;
 
+    private IFileSystem? _fileSystem;
+
+    public FixCommand() : base()
+    {
+        _fileSystem = new FileSystem();
+    }
+
+    public FixCommand(IFileSystem fs) : base()
+    {
+        _fileSystem = fs;
+    }
+
     // TODO: excluded item criteria (wildcard, file type... etc)
 
     public override async Task<int> RunAsync()
@@ -47,7 +60,7 @@ public partial class FixCommand : AsyncCommandBase
             if (e is null) continue;
 
             // Check the existence of the path
-            if (!Path.Exists(e))
+            if (!_fileSystem!.Path.Exists(e))
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] Path '{e.EscapeMarkup()}' does not exist.");
                 continue;
@@ -124,7 +137,7 @@ public partial class FixCommand : AsyncCommandBase
             var normalizedFilename = file.Normalize(System.Text.NormalizationForm.FormC);
             try
             {
-               await Task.Run(() => File.Move(file, normalizedFilename), ct);
+               await Task.Run(() => _fileSystem!.File.Move(file, normalizedFilename), ct);
                 AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been normalized to Form C.");
                 _successCount++;
             }
@@ -173,7 +186,7 @@ public partial class FixCommand : AsyncCommandBase
         IEnumerable<string>? detected = null;
         try
         {
-            detected = Directory.EnumerateFiles(path)
+            detected = _fileSystem!.Directory.EnumerateFiles(path)
                 .Where(f => !f.IsNormalized(form));
         }
         catch (DirectoryNotFoundException ex)
@@ -212,14 +225,14 @@ public partial class FixCommand : AsyncCommandBase
         return await Task<int>.FromResult(detected!.Count());
     }
 
-    private static PathObjectTypes CheckPathObjectType(string path)
+    private PathObjectTypes CheckPathObjectType(string path)
     {
-        if (Directory.Exists(path))
+        if (_fileSystem!.Directory.Exists(path))
         {
             return PathObjectTypes.Directory;
         }
 
-        if (File.Exists(path))
+        if (_fileSystem.File.Exists(path))
         {
             return PathObjectTypes.NormalFile;
         }
@@ -227,12 +240,12 @@ public partial class FixCommand : AsyncCommandBase
         return PathObjectTypes.Unknown;
     }
 
-    private static string? GetAbsolutePath(string? path)
+    private string? GetAbsolutePath(string? path)
     {
         string? rt = null;
         try
         {
-            rt = Path.GetFullPath(path);
+            rt = _fileSystem!.Path.GetFullPath(path);
         }
         catch (PathTooLongException ex)
         {
