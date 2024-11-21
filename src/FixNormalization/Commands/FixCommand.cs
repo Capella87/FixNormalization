@@ -5,7 +5,6 @@ using Ookii.CommandLine;
 using System.Text;
 using System.Security;
 using Ookii.CommandLine.Conversion;
-using Ookii.CommandLine.Validation;
 
 using FixNormalization.Validation;
 using System.IO.Abstractions;
@@ -22,8 +21,8 @@ namespace FixNormalization.Commands;
 public partial class FixCommand : AsyncCommandBase
 {
     [CommandLineArgument("target", IsPositional = false, Position = 0)]
-    [Description("Files or directories which contain files to be normalized.")]
-    [ValueDescription("target")]
+    [Description("Paths of files or directories' which contain files to be normalized.")]
+    [ValueDescription("path")]
     public required string[]? Target { get; set; }
 
     [CommandLineArgument("form", IsRequired = false, DefaultValue = NormalizationForm.FormC)]
@@ -121,7 +120,7 @@ public partial class FixCommand : AsyncCommandBase
         {
             // Show statistics
             // TODO: Silent option to skip showing results
-            // TODO: Redirect it to file when user enabled log option.
+            // TODO: Redirect the output to file when user enabled log option.
 
             // Temporary implementation
             AnsiConsole.MarkupLine($"[blue]Success: {_successCount}[/], [red]Failed: {failed.Count}[/]");
