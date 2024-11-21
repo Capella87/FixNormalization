@@ -14,7 +14,7 @@ internal class AppArgumentUsageWriter : UsageWriter
 
     protected override void WriteUsageSyntaxSuffix()
     {
-        Writer.Write(" [command args]");
+        Writer.Write(" [command-options]");
     }
 
     protected override void WriteArgumentDescriptions()

@@ -23,6 +23,6 @@ internal class AppCommandUsageWriter : UsageWriter
 
     protected override void WriteCommandHelpInstruction(string name, string argumentNamePrefix, string argumentName)
     {
-        base.WriteCommandHelpInstruction($"{name} [global args]", argumentNamePrefix, argumentName);
+        base.WriteCommandHelpInstruction($"{name} [global-options]", argumentNamePrefix, argumentName);
     }
 }
