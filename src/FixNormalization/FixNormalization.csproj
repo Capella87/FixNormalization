@@ -9,6 +9,7 @@
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
         <AssemblyName>fnorm</AssemblyName>
+        <Authors>Capella87</Authors>
     </PropertyGroup>
 
     <ItemGroup>
