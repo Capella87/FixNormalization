@@ -140,28 +140,28 @@ public partial class FixCommand : AsyncCommandBase
                 AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been normalized to Form C.");
                 _successCount++;
             }
-            catch (OperationCanceledException ex)
+            catch (OperationCanceledException)
             {
                 AnsiConsole.MarkupLine($"[orange][bold]Operation canceled[/] while renaming '{file.EscapeMarkup()}'[/]");
                 failed.Add(file);
                 throw;
             }
-            catch (PathTooLongException ex)
+            catch (PathTooLongException)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] File path '{file.EscapeMarkup()}' is too long to process on this system.");
                 failed.Add(file);
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] Access denied to '{file.EscapeMarkup()}'.");
                 failed.Add(file);
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] An I/O error occurred while processing '{file.EscapeMarkup()}'.");
                 failed.Add(file);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 AnsiConsole.MarkupLine($"[red]Error:[/] There was a problem while processing '{file.EscapeMarkup()}'.");
                 failed.Add(file);
@@ -188,28 +188,28 @@ public partial class FixCommand : AsyncCommandBase
             detected = _fileSystem!.Directory.EnumerateFiles(path)
                 .Where(f => !f.IsNormalized(form));
         }
-        catch (DirectoryNotFoundException ex)
+        catch (DirectoryNotFoundException)
         {
             AnsiConsole.MarkupLine($"[red]Error: Directory {path.EscapeMarkup()}[/] is not found.");
             return 2;
         }
-        catch (SecurityException ex)
+        catch (SecurityException)
         {
             AnsiConsole.MarkupLine($"[red]Error[/]: Directory {path.EscapeMarkup()} has security problem. (e.g. privileges)");
             return 13;
         }
-        catch (PathTooLongException ex)
+        catch (PathTooLongException)
         {
             AnsiConsole.MarkupLine($"[red]Error[/]: Path {path.EscapeMarkup()} exceeds the maximum length of path.");
             return 36;
         }
-        catch (ArgumentException ex)
+        catch (ArgumentException)
         {
             // TODO: Include stack trace information for debug
             AnsiConsole.MarkupLine($"[red]Error[/]: There was a problem to process path {path.EscapeMarkup()}");
             return 22;
         }
-        catch (IOException ex)
+        catch (IOException)
         {
             // TODO: Include stack trace information for debug
             AnsiConsole.MarkupLine($"[red]Error[/]: An I/O problem occurred while processing path {path.EscapeMarkup()}");
@@ -246,12 +246,12 @@ public partial class FixCommand : AsyncCommandBase
         {
             rt = _fileSystem!.Path.GetFullPath(path);
         }
-        catch (PathTooLongException ex)
+        catch (PathTooLongException)
         {
             AnsiConsole.MarkupLine($"[red]Error:[/] Path {path.EscapeMarkup()} exceeds the maximum length of path.");
             rt = null;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             AnsiConsole.MarkupLine($"[red]Error:[/] Path {path.EscapeMarkup()} is an invalid path.");
             rt = null;
