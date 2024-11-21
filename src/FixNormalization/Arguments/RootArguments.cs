@@ -7,6 +7,7 @@ namespace FixNormalization.Arguments;
 [GeneratedParser]
 partial class RootArguments
 {
-    [CommandLineArgument(IsPositional = true, CancelParsing = CancelMode.Success, IsHidden = true)]
+    [CommandLineArgument(IsPositional = true, CancelParsing = CancelMode.Success)]
+    [Description("Commands of fnorm.")]
     public required string Command { get; set; }
 }
