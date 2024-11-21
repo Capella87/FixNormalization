@@ -9,8 +9,6 @@ public class ValidateNormalizationFormAttribute : ArgumentValidationWithHelpAttr
 {
     public bool AllowNonDefinedValues { get; set; }
 
-    public bool IncludeInUsageHelp { get; set; }
-
     public bool IncludeValuesInErrorMessage { get; set; }
 
     public override bool IsValid(CommandLineArgument argument, object? value)
@@ -22,6 +20,6 @@ public class ValidateNormalizationFormAttribute : ArgumentValidationWithHelpAttr
     // Temporary implementation: Just shows exact enum values
     protected override string GetUsageHelpCore(CommandLineArgument argument) => argument.Parser.StringProvider.ValidateEnumValueUsageHelp(typeof(NormalizationForm));
 
-    public virtual string GetErrorMessage(CommandLineArgument argument, object? value)
+    public override string GetErrorMessage(CommandLineArgument argument, object? value)
     => argument.Parser.StringProvider.ValidationFailed(argument.ArgumentName);
 }
