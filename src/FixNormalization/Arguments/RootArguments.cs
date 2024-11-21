@@ -8,7 +8,7 @@ using System.Reflection;
 namespace FixNormalization.Arguments;
 
 [GeneratedParser]
-partial class RootArguments
+internal sealed partial class RootArguments
 {
     [CommandLineArgument(IsPositional = true, CancelParsing = CancelMode.Success)]
     [Description("Commands of fnorm.")]
@@ -30,14 +30,13 @@ partial class RootArguments
         return CancelMode.Abort;
     }
 
-    private static void ShowRichVersionInformation(LocalizedStringProvider provider, Assembly assembly, string appName)
+    public static void ShowRichVersionInformation(LocalizedStringProvider provider, Assembly assembly, string appName)
     {
         var version = GetAppVersion(assembly);
         var copyright = provider.ApplicationCopyright(assembly);
         // TODO: Get build date and git hash of application.
 
         AnsiConsole.MarkupLine($"[bold yellow]{appName}[/] {version.EscapeMarkup()}");
-        Console.WriteLine();
     }
 
     private static string GetAppVersion(Assembly assembly)
