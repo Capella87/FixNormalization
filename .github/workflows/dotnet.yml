@@ -7,10 +7,14 @@ on:
     branches: [ "master" ]
 jobs:
   build:
+    strategy:
+      matrix:
+        rid: [ "win-x64", "win-arm64" ]
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -25,9 +29,17 @@ jobs:
 
       - name: Publish
         run: |
-          dotnet publish ./src/FixNormalization -c Release -o ./pub/win/amd64 -r win-x64 --no-self-contained -v normal
-          dotnet publish ./src/FixNormalization -c Release -o ./pub/win/aarch64 -r win-arm64 --no-self-contained -v normal
+          dotnet publish ./src/FixNormalization -c Release -o ./pub/win-x64 -r win-x64 --no-self-contained -v normal
+          dotnet publish ./src/FixNormalization -c Release -o ./pub/win-arm64 -r win-arm64 --no-self-contained -v normal
 
       - name: Test projects
         run: dotnet test --verbosity normal
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bin-${{ matrix.rid }}
+          path: ./pub/${{ matrix.rid }}
+          compression-level: 6
+          if-no-files-found: warn
+          retention-days: 10
