@@ -8,6 +8,7 @@ using Ookii.CommandLine.Conversion;
 
 using FixNormalization.Validation;
 using System.IO.Abstractions;
+using System.IO.Enumeration;
 
 namespace FixNormalization.Commands;
 
@@ -33,6 +34,14 @@ public partial class FixCommand : AsyncCommandBase
         IncludeInUsageHelp = true,
         IncludeValuesInErrorMessage = true)]
     public NormalizationForm NForm { get; set; }
+
+    [CommandLineArgument(IsShort = true)]
+    [Description("Display more debug information.")]
+    public bool Verbose { get; set; }
+
+    [CommandLineArgument(IsShort = true)]
+    [Description("Display only notable warnings and errors.")]
+    public bool Quiet { get; set; }
 
     private int _successCount = 0;
 
