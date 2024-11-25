@@ -40,18 +40,22 @@ public partial class FixCommand : AsyncCommandBase
 
     public FixCommand() : base()
     {
-        _fileSystem = new FileSystem();
+        _fileSystem = null;
     }
 
-    public FixCommand(IFileSystem fs) : base()
+    // TODO: excluded item criteria (wildcard, file type... etc)
+
+    public async Task<int> RunAsync(IFileSystem? fs)
     {
         _fileSystem = fs;
+        return await RunAsync();
     }
 
     // TODO: excluded item criteria (wildcard, file type... etc)
 
     public override async Task<int> RunAsync()
     {
+        _fileSystem ??= new FileSystem();
 
         var targetedFiles = new List<string>()!;
         foreach (var entity in Target)
