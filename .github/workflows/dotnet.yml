@@ -25,8 +25,8 @@ jobs:
 
       - name: Publish
         run: |
-          dotnet publish -c Release -o ./pub/win/amd64 -r win-x64 --no-self-contained -v normal
-          dotnet publish -c Release -o ./pub/win/aarch64 -r win-arm64 --no-self-contained -v normal
+          dotnet publish ./src/FixNormalization -c Release -o ./pub/win/amd64 -r win-x64 --no-self-contained -v normal
+          dotnet publish ./src/FixNormalization -c Release -o ./pub/win/aarch64 -r win-arm64 --no-self-contained -v normal
 
       - name: Test projects
         run: dotnet test --verbosity normal
