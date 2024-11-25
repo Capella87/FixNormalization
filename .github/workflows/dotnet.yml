@@ -1,4 +1,4 @@
-name: .NET build and test
+name: .NET deployment
 
 on:
   push:
@@ -18,10 +18,16 @@ jobs:
 
       - name: Install dependencies
         run: dotnet restore
+
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: |
+          dotnet build -c Release --no-restore
+
+      - name: Publish
+        run: |
+          dotnet publish -c Release -o ./pub/win/amd64 -r win-x64 --no-self-contained -v normal
+          dotnet publish -c Release -o ./pub/win/aarch64 -r win-arm64 --no-self-contained -v normal
 
       - name: Test projects
-        run: dotnet test --verbosity detailed
-
+        run: dotnet test --verbosity normal
 
