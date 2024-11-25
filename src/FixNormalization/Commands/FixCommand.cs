@@ -52,6 +52,7 @@ public partial class FixCommand : AsyncCommandBase
 
     public override async Task<int> RunAsync()
     {
+
         var targetedFiles = new List<string>()!;
         foreach (var entity in Target)
         {
@@ -133,11 +134,12 @@ public partial class FixCommand : AsyncCommandBase
     {
         foreach (var file in files)
         {
-            var normalizedFilename = file.Normalize(System.Text.NormalizationForm.FormC);
+            var basePath = _fileSystem!.Path.GetDirectoryName(file);
+            var normalizedFilename = _fileSystem.Path.GetFileName(file).Normalize(NForm);
             try
             {
-               await Task.Run(() => _fileSystem!.File.Move(file, normalizedFilename), ct);
-                AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been normalized to Form C.");
+               await Task.Run(() => _fileSystem!.File.Move(file, Path.Join(basePath, normalizedFilename)), ct);
+                AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been normalized to {Enum.GetName(typeof(NormalizationForm), NForm)}.");
                 _successCount++;
             }
             catch (OperationCanceledException)
@@ -186,7 +188,7 @@ public partial class FixCommand : AsyncCommandBase
         try
         {
             detected = _fileSystem!.Directory.EnumerateFiles(path)
-                .Where(f => !f.IsNormalized(form));
+                .Where(f => !_fileSystem.Path.GetFileName(f).IsNormalized(form));
         }
         catch (DirectoryNotFoundException)
         {
