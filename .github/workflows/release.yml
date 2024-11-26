@@ -20,55 +20,73 @@ jobs:
         architecture:
           - win-x64
           - win-arm64
+          - linux-x64
+          - linux-arm64
     env:
       release: 'fnorm-${{ github.ref_name }}-${{ matrix.architecture }}'
+      release-directory: '${{ github.workspace }}/pub/${{ matrix.architecture }}'
+      archive-directory: '${{ github.workspace }}/archives'
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
 
+      - name: Create an archive directory
+        run: mkdir -p ${{ env.archive-directory }}
+
       - name: Publish ${{ matrix.architecture }} (Windows)
         if: matrix.architecture == 'win-x64' || matrix.architecture == 'win-arm64'
-        run: dotnet publish ./src/FixNormalization -c Release -o ./pub/${{ matrix.architecture }} -r ${{ matrix.architecture }} --no-self-contained -v normal
+        run: dotnet publish ./src/FixNormalization -c Release -o ${{ env.release-directory }} -r ${{ matrix.architecture }} --no-self-contained -v normal
 
       - name: Publish ${{ matrix.architecture }} (Others)
         if: matrix.architecture != 'win-x64' && matrix.architecture != 'win-arm64'
-        run: dotnet publish ./src/FixNormalization -c Release -o ./pub/${{ matrix.architecture }} -r ${{ matrix.architecture }} --self-contained -v normal
+        run: dotnet publish ./src/FixNormalization -c Release -o ${{ env.release-directory }} -r ${{ matrix.architecture }} --self-contained -v normal
 
-      - name: Remove unnecessary files
+      - name: Remove Unnecessary Files  
         run: |
           pushd
-          Set-Location -Path ./pub/${{ matrix.architecture }}
+          cd ${{ github.workspace }}/pub/${{ matrix.architecture }}
           Get-ChildItem -Filter *.pdb | Remove-Item -Force
           Get-ChildItem -Filter *.deps.json -Recurse | Remove-Item
           Get-ChildItem -Filter *.runtimeconfig.json -Recurse | Remove-Item
           popd
-      - name: Archive release ${{ env.release }}
-        uses: thedoctor0/zip-release@master
+
+      - name: Create Archives
+        uses: thedoctor0/zip-release@0.7.5
         with:
-          filename: './${{ env.release }}.zip'
-          directory: './pub/${{ matrix.architecture }}'
-      - name: Upload release ${{ env.release }}
+          type: 'zip'
+          filename: '${{ env.release }}.zip'
+          directory: ${{ env.archive-directory }}
+          path: ${{ env.release-directory }}
+
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.release }}-binary
-          path: ./${{ env.release }}.zip
+          path: ${{ env.archive-directory }}/${{ env.release }}.zip
+          overwrite: true
+
   create-release:
     name: Create Release on GitHub
     needs: [publish]
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       discussions: write
+    env:
+      blobs: '${{ github.workspace }}/blobs'
     steps:
-
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: fnorm-${{ github.ref_name }}-*-binary
-          path: result
+          pattern: '*-binary'
+          path: ${{ env.blobs }}
+          merge-multiple: true
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -77,8 +95,6 @@ jobs:
           draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
-            result/*.zip
+            ${{ env.blobs }}/*
           make_latest: ${{ !contains(github.ref_name, '-') }}
           prerelease: ${{ contains(github.ref_name, '-') }}
-
-
