@@ -33,7 +33,6 @@ public static class Program
 
         var appCommandManager = new AppCommandManager(appCommandOptions);
 
-        // TODO: Invoke without Microsoft.Extensions.Hosting (Generic Host) with CancelMode ? (Enable hosting with valid command.)
         // For root arguments
         var rootParseOptions = new ParseOptions()
         {

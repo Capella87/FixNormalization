@@ -137,7 +137,12 @@ public partial class FixCommand : AsyncCommandBase
             // TODO: Redirect the output to file when user enabled log option.
 
             // Temporary implementation
-            AnsiConsole.MarkupLine($"[blue]Success: {_successCount}[/], [red]Failed: {failed.Count}[/]");
+            AnsiConsole.WriteLine("Done.");
+            if (!Quiet)
+            {
+                Console.Beep();
+            }
+            AnsiConsole.MarkupLine($"[green][bold]Success[/]: {_successCount}[/], [red]Failed: {failed.Count}[/]");
         }
 
         return 0;
