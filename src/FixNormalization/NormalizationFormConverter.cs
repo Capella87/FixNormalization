@@ -43,14 +43,15 @@ public sealed class NormalizationFormConverter : ArgumentConverter
     internal static object? ParseNormalizationForm(string value)
     {
         ReadOnlySpan<char> lowered = value.ToLower().AsSpan();
-
-        return (ReadOnlySpan<char> lowered) => lowered switch
-        {
-            "nfd" or "formd" or "macos" or "darwin" => NormalizationForm.FormD,
-            "nfc" or "formc" or "windows" or "linux" => NormalizationForm.FormC,
-            _ => throw new ArgumentException($"Value {value.ToString()} is invalid.")
-        };
+        return ConvertToNormalizationForm(lowered);
     }
+
+    private static NormalizationForm ConvertToNormalizationForm(ReadOnlySpan<char> target) => target switch
+    {
+        "nfd" or "formd" or "macos" or "darwin" => NormalizationForm.FormD,
+        "nfc" or "formc" or "windows" or "linux" => NormalizationForm.FormC,
+        _ => throw new ArgumentException($"Value {target.ToString()} is invalid.")
+    };
 
     private string GetExceptionMessage(string value, CommandLineArgument argument, ValidateNormalizationFormAttribute? attr)
     {
