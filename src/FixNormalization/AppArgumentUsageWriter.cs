@@ -22,4 +22,9 @@ internal class AppArgumentUsageWriter : UsageWriter
         base.WriteArgumentDescriptions();
         _commandManager.WriteUsage();
     }
+
+    protected override void WriteSwitchValueDescription(string valueDescription)
+    {
+        // Intentionally left blank... No reason to write switch value description.
+    }
 }
