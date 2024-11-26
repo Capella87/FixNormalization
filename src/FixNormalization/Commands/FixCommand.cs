@@ -156,8 +156,9 @@ public partial class FixCommand : AsyncCommandBase
             var normalizedFilename = _fileSystem.Path.GetFileName(file).Normalize(NForm);
             try
             {
-               await Task.Run(() => _fileSystem!.File.Move(file, Path.Join(basePath, normalizedFilename)), ct);
-                AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been normalized to {Enum.GetName(typeof(NormalizationForm), NForm)}.");
+                var normalizedPath = Path.Join(basePath, normalizedFilename);
+               await Task.Run(() => _fileSystem!.File.Move(file, normalizedPath), ct);
+                AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been converted to {normalizedFilename.EscapeMarkup()} following {Enum.GetName(typeof(NormalizationForm), NForm)}.");
                 _successCount++;
             }
             catch (OperationCanceledException)
