@@ -11,7 +11,7 @@ on:
 
 jobs:
   publish:
-    runs-on: [windows-release]
+    runs-on: [windows-latest]
     permissions:
       contents: write
       discussions: write
