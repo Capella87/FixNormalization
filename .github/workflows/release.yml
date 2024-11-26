@@ -45,13 +45,12 @@ jobs:
         if: matrix.architecture != 'win-x64' && matrix.architecture != 'win-arm64'
         run: dotnet publish ./src/FixNormalization -c Release -o ${{ env.release-directory }} -r ${{ matrix.architecture }} --self-contained -v normal
 
-      - name: Remove Unnecessary Files  
+      - name: Remove Unnecessary Files
         run: |
           pushd
           cd ${{ github.workspace }}/pub/${{ matrix.architecture }}
           Get-ChildItem -Filter *.pdb | Remove-Item -Force
           Get-ChildItem -Filter *.deps.json -Recurse | Remove-Item
-          Get-ChildItem -Filter *.runtimeconfig.json -Recurse | Remove-Item
           popd
 
       - name: Create Archives

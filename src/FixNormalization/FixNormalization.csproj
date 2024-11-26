@@ -5,11 +5,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Version>0.2.0-alpha.4</Version>
-        <GitVersion>false</GitVersion>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
         <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
         <AssemblyName>fnorm</AssemblyName>
         <Authors>Capella87</Authors>
+        <SelfContained>false</SelfContained>
     </PropertyGroup>
 
     <ItemGroup>
