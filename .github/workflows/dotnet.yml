@@ -11,16 +11,19 @@ jobs:
       matrix:
         rid: [ "win-x64", "win-arm64" ]
     runs-on: windows-latest
-
+    permissions:
+      contents: write
+      discussions: write
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          cache: false
 
-      - name: Install dependencies
+      - name: restore dependencies
         run: dotnet restore
 
       - name: Build
@@ -34,11 +37,25 @@ jobs:
       - name: Test projects
         run: dotnet test --verbosity normal
 
+      - name: Set Short SHA name to github.sha
+        run: |
+          sa=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SIX_SHA=$sa" >> $GITHUB_ENV
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fnorm-${{ matrix.rid }}
+          name: fnorm-build-${{ env.COMMIT_SHORT_SIX_SHA }}-${{ matrix.rid }}
           path: ./pub/${{ matrix.rid }}
           compression-level: 6
           if-no-files-found: warn
           retention-days: 10
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          draft: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            fnorm-build-${{ env.COMMIT_SHORT_SIX_SHA }}-${{ matrix.rid }}
+
