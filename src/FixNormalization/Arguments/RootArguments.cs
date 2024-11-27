@@ -8,6 +8,7 @@ using System.Reflection;
 namespace FixNormalization.Arguments;
 
 [GeneratedParser]
+[Description("Fix Unicode normalization of filenames.")]
 internal sealed partial class RootArguments
 {
     [CommandLineArgument(IsPositional = true, CancelParsing = CancelMode.Success)]
