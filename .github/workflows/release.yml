@@ -53,6 +53,9 @@ jobs:
           Get-ChildItem -Filter *.deps.json -Recurse | Remove-Item
           popd
 
+      - name: Copy README and LICENSE
+        run: cp ${{ github.workspace }}/README.md ${{ env.release-directory }} && cp ${{ github.workspace }}/LICENSE ${{ env.release-directory }}
+
       - name: Create Archives
         uses: thedoctor0/zip-release@0.7.5
         with:
