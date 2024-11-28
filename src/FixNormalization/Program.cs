@@ -31,7 +31,8 @@ public static class Program
             AutoVersionArgument = false,
             AutoHelpArgument = true,
             CommandNameTransform = NameTransform.DashCase,
-            UsageWriter = commandUsageWriter
+            UsageWriter = commandUsageWriter,
+            ShowUsageOnError = UsageHelpRequest.Full,
         };
 
         var appCommandManager = new AppCommandManager(appCommandOptions);
