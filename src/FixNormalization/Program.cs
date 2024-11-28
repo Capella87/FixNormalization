@@ -3,6 +3,7 @@ using FixNormalization.Commands;
 using Ookii.CommandLine;
 using Ookii.CommandLine.Commands;
 using Spectre.Console;
+using System.Text;
 
 namespace FixNormalization;
 
@@ -12,6 +13,8 @@ public static class Program
 
     public static async Task<int> Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
+
         var commandUsageWriter = new AppCommandUsageWriter()
         {
             IncludeAliasInDescription = true,
