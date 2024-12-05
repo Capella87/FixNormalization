@@ -23,8 +23,16 @@ internal sealed partial class RootArguments
     [Description("Display version information.")]
     public static CancelMode Version(CommandLineParser parser)
     {
+        var assembly = Assembly.GetExecutingAssembly();
+
+        if (assembly is null)
+        {
+            AnsiConsole.MarkupLine($"[yellow bold]{parser.ApplicationFriendlyName}[/] Unknown version");
+            return CancelMode.Abort;
+        }
+
         ShowRichVersionInformation(parser.StringProvider,
-            Assembly.GetExecutingAssembly(),
+            assembly,
             parser.ApplicationFriendlyName);
 
         // We must halt further parsing...
