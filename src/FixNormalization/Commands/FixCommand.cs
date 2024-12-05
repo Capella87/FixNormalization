@@ -5,10 +5,9 @@ using Ookii.CommandLine;
 using System.Text;
 using System.Security;
 using Ookii.CommandLine.Conversion;
+using System.IO.Abstractions;
 
 using FixNormalization.Validation;
-using System.IO.Abstractions;
-using System.IO.Enumeration;
 
 namespace FixNormalization.Commands;
 
@@ -43,6 +42,10 @@ public partial class FixCommand : AsyncCommandBase
     [Description("Display only notable warnings and errors.")]
     public bool Quiet { get; set; }
 
+    [CommandLineArgument(IsShort = true)]
+    [Description("Enable recursive option. Process all files also in subdirectories.")]
+    public bool Recursive { get; set; }
+
     private int _successCount = 0;
 
     private IFileSystem? _fileSystem;
@@ -52,15 +55,13 @@ public partial class FixCommand : AsyncCommandBase
         _fileSystem = null;
     }
 
-    // TODO: excluded item criteria (wildcard, file type... etc)
+    // TODO: Excluded item criteria (wildcard, file type... etc)
 
     public async Task<int> RunAsync(IFileSystem? fs)
     {
         _fileSystem = fs;
         return await RunAsync();
     }
-
-    // TODO: excluded item criteria (wildcard, file type... etc)
 
     public override async Task<int> RunAsync()
     {
@@ -84,8 +85,7 @@ public partial class FixCommand : AsyncCommandBase
                 case PathObjectTypes.Directory:
 
                     // Check all files in the directory
-                    // TODO: Support recursive detection
-                    await DetectFilesInDirectory(e, targetedFiles, isRecursive: false
+                    await DetectFilesInDirectory(e, targetedFiles, isRecursive: Recursive
                         , form: NForm, null);
                     break;
 
@@ -157,8 +157,8 @@ public partial class FixCommand : AsyncCommandBase
             try
             {
                 var normalizedPath = Path.Join(basePath, normalizedFilename);
-               await Task.Run(() => _fileSystem!.File.Move(file, normalizedPath), ct);
-                AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been converted to {normalizedFilename.EscapeMarkup()} following {Enum.GetName(typeof(NormalizationForm), NForm)}.");
+                await Task.Run(() => _fileSystem!.File.Move(file, normalizedPath), ct);
+                AnsiConsole.MarkupLine($"[green]Success:[/] File '{file.EscapeMarkup()}' has been converted to '{normalizedFilename.EscapeMarkup()}' following {Enum.GetName(typeof(NormalizationForm), NForm)}.");
                 _successCount++;
             }
             catch (OperationCanceledException)
@@ -193,57 +193,74 @@ public partial class FixCommand : AsyncCommandBase
         }
     }
 
-    private async Task<int> DetectFilesInDirectory(string path, List<string> files,
-        bool isRecursive,
-        NormalizationForm form,
-        int? level = null)
+    private async Task<int> DetectFilesInDirectory(string path, List<string> files, bool isRecursive, string searchPatterns, NormalizationForm form, int? level = null)
     {
-        // TODO: Search files with threads (Count and listing require locking..)
         // TODO: Separate detection work for async and multi-threading...
         // TODO: Search pattern support (Mandated thing to support recursion)
         // TODO: Show targeted files of directory in verbose mode.
         // TODO: Show debug information or write them to log file in debug mode...
+        List<string>? dirs = new List<string>() { path };
         IEnumerable<string>? detected = null;
+
         try
         {
-            detected = _fileSystem!.Directory.EnumerateFiles(path)
-                .Where(f => !_fileSystem.Path.GetFileName(f).IsNormalized(form));
+            if (isRecursive)
+            {
+                AnsiConsole.MarkupLine("[yellow][bold]Info[/]: Recursive mode is enabled. Now files in subdirectories will also be processed.[/]");
+                dirs.AddRange(GetSubDirectories(path, ""));
+            }
+
+            foreach (var d in dirs)
+            {
+                // All subdirectories are included in the list to be processed.
+                detected = _fileSystem!.Directory.EnumerateFiles(d, searchPatterns, SearchOption.TopDirectoryOnly)
+                    .Where(f => !_fileSystem.Path.GetFileName(f).IsNormalized(form));
+                if (detected is not null)
+                {
+                    files.AddRange(detected);
+                }
+            }
         }
         catch (DirectoryNotFoundException)
         {
-            AnsiConsole.MarkupLine($"[red]Error: Directory {path.EscapeMarkup()}[/] is not found.");
+            AnsiConsole.MarkupLine($"[red]Error[/]: Directory '{path.EscapeMarkup()}'[/] is not found.");
             return 2;
         }
         catch (SecurityException)
         {
-            AnsiConsole.MarkupLine($"[red]Error[/]: Directory {path.EscapeMarkup()} has security problem. (e.g. privileges)");
+            AnsiConsole.MarkupLine($"[red]Error[/]: Directory '{path.EscapeMarkup()}' has security problem. (e.g. privileges)");
             return 13;
         }
         catch (PathTooLongException)
         {
-            AnsiConsole.MarkupLine($"[red]Error[/]: Path {path.EscapeMarkup()} exceeds the maximum length of path.");
+            AnsiConsole.MarkupLine($"[red]Error[/]: Path '{path.EscapeMarkup()}' exceeds the maximum length of path.");
             return 36;
         }
         catch (ArgumentException)
         {
             // TODO: Include stack trace information for debug
-            AnsiConsole.MarkupLine($"[red]Error[/]: There was a problem to process path {path.EscapeMarkup()}");
+            AnsiConsole.MarkupLine($"[red]Error[/]: There was a problem to process path '{path.EscapeMarkup()}'.");
             return 22;
         }
         catch (IOException)
         {
             // TODO: Include stack trace information for debug
-            AnsiConsole.MarkupLine($"[red]Error[/]: An I/O problem occurred while processing path {path.EscapeMarkup()}");
+            AnsiConsole.MarkupLine($"[red]Error[/]: An I/O problem occurred while processing path '{path.EscapeMarkup()}'.");
             return 5;
         }
-
-        if (detected is not null)
-        {
-            files.AddRange(detected);
-        }
-
         return await Task<int>.FromResult(detected!.Count());
     }
+
+    [Obsolete("Use DetectFilesInDirectory(string, List<string>, bool, string, NormalizationForm, int?) instead.", error: false)]
+    private async Task<int> DetectFilesInDirectory(string path, List<string> files,
+        bool isRecursive,
+        NormalizationForm form,
+        int? level = null)
+    {
+        return await DetectFilesInDirectory(path, files, isRecursive, "*.*", form, level);
+    }
+
+    private IEnumerable<string> GetSubDirectories(string basePath, string searchPatterns) => _fileSystem!.Directory.EnumerateDirectories(basePath, searchPatterns, SearchOption.AllDirectories);
 
     private PathObjectTypes CheckPathObjectType(string path)
     {
