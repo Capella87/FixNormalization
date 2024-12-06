@@ -18,8 +18,10 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         this.fixture = fixture;
     }
 
+    [InlineData(".\\")]
     [InlineData(".\\FirstSubDir\\옛한글")]
     [InlineData(".\\FirstSubDir")]
+    [InlineData(".\\Western\\")]
     [Theory]
     public async Task FormDFileSystem_Directory_Should_Be_Normalized_To_FormC_NonRecursive(string directoryPath)
     {
