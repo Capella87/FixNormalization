@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Text;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FixNormalization.Tests;
 
@@ -64,5 +65,14 @@ public static class FileSystemFixtureHelpers
     {
         var filenameSeparatorIdx = path.LastIndexOf(fixture.FileSystem!.Path.DirectorySeparatorChar);
         return fixture.FileSystem!.Path.Combine(path.Substring(0, filenameSeparatorIdx), fixture.FileSystem!.Path.GetFileName(path).Normalize(form));
+    }
+
+    public static void ShowFilesInFileSystem(FileSystemFixture fixture, ITestOutputHelper output)
+    {
+        output.WriteLine("Files in FileSystem:");
+        foreach (var filename in fixture.FileSystem!.Directory.EnumerateFiles(fixture.FileSystem.Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories))
+        {
+            output.WriteLine($"{filename}");
+        }
     }
 }
