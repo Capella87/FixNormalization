@@ -47,9 +47,16 @@ public class FileSystemFixture : IDisposable
         {
             var root = mockFileSystem.Directory.GetCurrentDirectory();
 
+            // Delete subdirectories including contents in the root directory
             foreach (var dir in mockFileSystem.Directory.GetDirectories(root))
             {
                 mockFileSystem.Directory.Delete(dir, true);
+            }
+
+            // Delete files in the root directory
+            foreach (var file in mockFileSystem.Directory.GetFiles(root))
+            {
+                mockFileSystem.File.Delete(file);
             }
         }
     }
