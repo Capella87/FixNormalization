@@ -13,9 +13,12 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
 {
     FileSystemFixture fixture;
 
-    public FormDNormalizationTests(FileSystemFixture fixture)
+    private readonly ITestOutputHelper _output;
+
+    public FormDNormalizationTests(FileSystemFixture fixture, ITestOutputHelper output)
     {
         this.fixture = fixture;
+        _output = output;
     }
 
     [InlineData(".\\")]
@@ -29,6 +32,8 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         FileSystemFixtureHelpers.ConfigureMockData(fixture, NormalizationForm.FormD);
 
         var targetParser = new CommandLineParser<FixCommand>();
+
+        FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
 
         // Act
         var c = targetParser.ParseWithErrorHandling([directoryPath, "-q"]);
@@ -59,6 +64,8 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         var targetParser = new CommandLineParser<FixCommand>();
         string rootPath = fixture.FileSystem!.Path.GetPathRoot(fixture.FileSystem.Directory.GetCurrentDirectory())!;
 
+        FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
+
         // Act
         var c = targetParser.ParseWithErrorHandling([rootPath, "-q", "-r"]);
 
@@ -82,6 +89,8 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         FileSystemFixtureHelpers.ConfigureMockData(fixture, NormalizationForm.FormD);
 
         var targetParser = new CommandLineParser<FixCommand>();
+
+        FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
 
         var originalFilename = FileSystemFixtureHelpers.NormalizePathFilenameOnly(fixture, filePath, NormalizationForm.FormD);
 
