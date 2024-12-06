@@ -59,4 +59,10 @@ public static class FileSystemFixtureHelpers
 
         return true;
     }
+
+    public static string NormalizePathFilenameOnly(FileSystemFixture fixture, string path, NormalizationForm form)
+    {
+        var filenameSeparatorIdx = path.LastIndexOf(fixture.FileSystem!.Path.DirectorySeparatorChar);
+        return fixture.FileSystem!.Path.Combine(path.Substring(0, filenameSeparatorIdx), fixture.FileSystem!.Path.GetFileName(path).Normalize(form));
+    }
 }

@@ -85,8 +85,10 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
 
         var targetParser = new CommandLineParser<FixCommand>();
 
+        var originalFilename = FileSystemFixtureHelpers.NormalizePathFilenameOnly(fixture, filePath, NormalizationForm.FormD);
+
         // Act
-        var c = targetParser.ParseWithErrorHandling([filePath, "-q"]);
+        var c = targetParser.ParseWithErrorHandling([originalFilename, "-q"]);
 
         var r = await c!.RunAsync(fixture.FileSystem);
 
