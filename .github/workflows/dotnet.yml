@@ -25,5 +25,6 @@ jobs:
           dotnet build -c Release --no-restore
 
       - name: Test projects
-        run: dotnet test --verbosity normal
-
+        run: |
+          chcp 65001
+          dotnet test --verbosity normal
