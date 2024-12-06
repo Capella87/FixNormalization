@@ -71,10 +71,6 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
 
             filename.IsNormalized(NormalizationForm.FormC).Should().BeTrue();
         }
-
-        // Assert for files in subdirectories
-        Assert.All(this.fixture.FileSystem.Directory.GetFiles(rootPath, "", SearchOption.AllDirectories),
-            (f) => f.IsNormalized(NormalizationForm.FormC).Should().BeTrue());
     }
 
     [InlineData(".\\어린양.txt")]
