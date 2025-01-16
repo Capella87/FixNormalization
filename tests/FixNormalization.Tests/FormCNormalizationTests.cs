@@ -1,7 +1,6 @@
 using Xunit;
 using Xunit.Abstractions;
 using NSubstitute;
-using FluentAssertions;
 using System.Text;
 using Ookii.CommandLine;
 using Ookii.CommandLine.Commands;
@@ -45,7 +44,7 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
         {
             var filename = fixture.FileSystem.Path.GetFileName(f);
 
-            filename.IsNormalized(NormalizationForm.FormD).Should().BeTrue();
+            Assert.True(filename.IsNormalized(NormalizationForm.FormD));
         }
 
         // Assert for files which should not be normalized in subdirectories
@@ -76,7 +75,7 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
         {
             var filename = fixture.FileSystem.Path.GetFileName(f);
 
-            filename.IsNormalized(NormalizationForm.FormD).Should().BeTrue();
+            Assert.True(filename.IsNormalized(NormalizationForm.FormD));
         }
     }
 
@@ -99,6 +98,6 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
 
         // Assertion
         var filename = fixture.FileSystem!.Path.GetFileName(filePath).Normalize(NormalizationForm.FormD);
-        filename.IsNormalized(NormalizationForm.FormD).Should().BeTrue();
+        Assert.True(filename.IsNormalized(NormalizationForm.FormD));
     }
 }
