@@ -11,12 +11,17 @@ namespace FixNormalization;
 
 public sealed class NormalizationFormConverter : ArgumentConverter
 {
-    public override object? Convert(ReadOnlySpan<char> value, CultureInfo culture, CommandLineArgument argument)
+    public override object? Convert(ReadOnlyMemory<char> value, CultureInfo culture, CommandLineArgument argument)
     {
         return Convert(value.ToString(), culture, argument);
     }
 
-    public override object? Convert(string value, CultureInfo culture, CommandLineArgument argument)
+    public object? Convert(ReadOnlySpan<char> value, CultureInfo culture, CommandLineArgument argument)
+    {
+        return Convert(value.ToString(), culture, argument);
+    }
+
+    public object? Convert(string value, CultureInfo culture, CommandLineArgument argument)
     {
         var attribute = argument.Validators.OfType<ValidateNormalizationFormAttribute>()!.FirstOrDefault();
 
