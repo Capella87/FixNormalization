@@ -57,13 +57,13 @@ public partial class FixCommand : AsyncCommandBase
 
     // TODO: Excluded item criteria (wildcard, file type... etc)
 
-    public async Task<int> RunAsync(IFileSystem? fs)
+    public async Task<int> RunAsync(IFileSystem? fs, CancellationToken token)
     {
         _fileSystem = fs;
-        return await RunAsync();
+        return await RunAsync(token);
     }
 
-    public override async Task<int> RunAsync()
+    public override async Task<int> RunAsync(CancellationToken token)
     {
         _fileSystem ??= new FileSystem();
 
@@ -116,7 +116,7 @@ public partial class FixCommand : AsyncCommandBase
         var failed = new List<string>();
         try
         {
-            await NormalizeFiles(targetedFiles, failed, this.CancellationToken);
+            await NormalizeFiles(targetedFiles, failed, token);
         }
         catch (OperationCanceledException)
         {
