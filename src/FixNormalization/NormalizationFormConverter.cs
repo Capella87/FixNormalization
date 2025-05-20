@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Text;
 
-using FixNormalization.Validation;
-
 namespace FixNormalization;
 
 public sealed class NormalizationFormConverter : ArgumentConverter
@@ -23,7 +21,7 @@ public sealed class NormalizationFormConverter : ArgumentConverter
 
     public object? Convert(string value, CultureInfo culture, CommandLineArgument argument)
     {
-        var attribute = argument.Validators.OfType<ValidateNormalizationFormAttribute>()!.FirstOrDefault();
+        var attribute = argument.Validators.OfType<ValidateEnumValueAttribute>()!.FirstOrDefault();
 
         try
         {
@@ -58,7 +56,7 @@ public sealed class NormalizationFormConverter : ArgumentConverter
         _ => throw new ArgumentException($"Value {target.ToString()} is invalid.")
     };
 
-    private string GetExceptionMessage(string value, CommandLineArgument argument, ValidateNormalizationFormAttribute? attr)
+    private string GetExceptionMessage(string value, CommandLineArgument argument, ValidateEnumValueAttribute? attr)
     {
         return attr!.GetErrorMessage(argument, value) ?? argument.Parser.StringProvider.ValidateEnumValueFailed(argument.ArgumentName, typeof(NormalizationForm), value, true);
     }
