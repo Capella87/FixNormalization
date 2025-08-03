@@ -20,10 +20,10 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         _output = output;
     }
 
-    [InlineData(".\\")]
-    [InlineData(".\\FirstSubDir\\옛한글")]
-    [InlineData(".\\FirstSubDir")]
-    [InlineData(".\\Western\\")]
+    [InlineData("./")]
+    [InlineData("./FirstSubDir/옛한글")]
+    [InlineData("./FirstSubDir")]
+    [InlineData("./Western/")]
     [Theory]
     public async Task FormDFileSystem_Directory_Should_Be_Normalized_To_FormC_NonRecursive(string directoryPath)
     {
@@ -83,8 +83,8 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         }
     }
 
-    [InlineData(".\\어린양.txt")]
-    [InlineData(".\\Western\\Áçčèñţşůşîñģdïäçřïţïçš.txt")]
+    [InlineData("./어린양.txt")]
+    [InlineData("./Western/Áçčèñţşůşîñģdïäçřïţïçš.txt")]
     [Theory]
     public async Task FormDFileSystem_File_Should_Be_Normalized_To_FormC(string filePath)
     {
