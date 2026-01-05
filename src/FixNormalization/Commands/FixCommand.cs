@@ -7,7 +7,7 @@ using System.Security;
 using Ookii.CommandLine.Conversion;
 using System.IO.Abstractions;
 
-using FixNormalization.Validation;
+using Ookii.CommandLine.Validation;
 
 namespace FixNormalization.Commands;
 
@@ -29,7 +29,7 @@ public partial class FixCommand : AsyncCommandBase
     [Description("Normalization form to be used. You can choose NFC (The most common types in the majority of environments) and NFD (Used in macOS or Darwin)")]
     [ValueDescription("form")]
     [ArgumentConverter(typeof(NormalizationFormConverter))]
-    [ValidateNormalizationForm(AllowNonDefinedValues = true,
+    [ValidateEnumValue(AllowNonDefinedValues = TriState.True,
         IncludeInUsageHelp = true,
         IncludeValuesInErrorMessage = true)]
     public NormalizationForm NForm { get; set; }
@@ -57,13 +57,13 @@ public partial class FixCommand : AsyncCommandBase
 
     // TODO: Excluded item criteria (wildcard, file type... etc)
 
-    public async Task<int> RunAsync(IFileSystem? fs)
+    public async Task<int> RunAsync(IFileSystem? fs, CancellationToken token)
     {
         _fileSystem = fs;
-        return await RunAsync();
+        return await RunAsync(token);
     }
 
-    public override async Task<int> RunAsync()
+    public override async Task<int> RunAsync(CancellationToken token)
     {
         _fileSystem ??= new FileSystem();
 
@@ -116,7 +116,7 @@ public partial class FixCommand : AsyncCommandBase
         var failed = new List<string>();
         try
         {
-            await NormalizeFiles(targetedFiles, failed, this.CancellationToken);
+            await NormalizeFiles(targetedFiles, failed, token);
         }
         catch (OperationCanceledException)
         {

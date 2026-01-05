@@ -20,10 +20,10 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
         _output = output;
     }
 
-    [InlineData(".\\")]
-    [InlineData(".\\FirstSubDir\\옛한글")]
-    [InlineData(".\\FirstSubDir")]
-    [InlineData(".\\Western\\")]
+    [InlineData("./")]
+    [InlineData("./FirstSubDir/옛한글")]
+    [InlineData("./FirstSubDir")]
+    [InlineData("./Western/")]
     [Theory]
     public async Task FormCFileSystem_Directory_Should_Be_Normalized_To_FormD_NonRecursive(string directoryPath)
     {
@@ -33,11 +33,12 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
         var targetParser = new CommandLineParser<FixCommand>();
 
         FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
+        var t = new CancellationTokenSource();
 
         // Act
         var c = targetParser.ParseWithErrorHandling([directoryPath, "--form", "nfd", "-q"]);
 
-        var r = await c!.RunAsync(fixture.FileSystem);
+        var r = await c!.RunAsync(fixture.FileSystem, t.Token);
 
         // Assertion
         foreach (var f in fixture.FileSystem!.Directory.GetFiles(directoryPath))
@@ -65,10 +66,12 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
 
         FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
 
+        var t = new CancellationTokenSource();
+
         // Act
         var c = targetParser.ParseWithErrorHandling([rootPath, "--form", "nfd", "-q", "-r"]);
 
-        var r = await c!.RunAsync(fixture.FileSystem);
+        var r = await c!.RunAsync(fixture.FileSystem, t.Token);
 
         // Assertion
         foreach (var f in fixture.FileSystem!.Directory.GetFiles(rootPath, "", SearchOption.AllDirectories))
@@ -79,8 +82,8 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
         }
     }
 
-    [InlineData(".\\어린양.txt")]
-    [InlineData(".\\Western\\Áçčèñţşůşîñģdïäçřïţïçš.txt")]
+    [InlineData("./어린양.txt")]
+    [InlineData("./Western/Áçčèñţşůşîñģdïäçřïţïçš.txt")]
     [Theory]
     public async Task FormCFileSystem_File_Should_Be_Normalized_To_FormD(string filePath)
     {
@@ -91,10 +94,12 @@ public class FormCNormalizationTests : IClassFixture<FileSystemFixture>
 
         FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
 
+        var t = new CancellationTokenSource();
+
         // Act
         var c = targetParser.ParseWithErrorHandling([filePath, "--form", "nfd", "-q"]);
 
-        var r = await c!.RunAsync(fixture.FileSystem);
+        var r = await c!.RunAsync(fixture.FileSystem, t.Token);
 
         // Assertion
         var filename = fixture.FileSystem!.Path.GetFileName(filePath).Normalize(NormalizationForm.FormD);

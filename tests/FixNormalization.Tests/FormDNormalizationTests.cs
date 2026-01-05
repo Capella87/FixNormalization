@@ -20,10 +20,10 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         _output = output;
     }
 
-    [InlineData(".\\")]
-    [InlineData(".\\FirstSubDir\\옛한글")]
-    [InlineData(".\\FirstSubDir")]
-    [InlineData(".\\Western\\")]
+    [InlineData("./")]
+    [InlineData("./FirstSubDir/옛한글")]
+    [InlineData("./FirstSubDir")]
+    [InlineData("./Western/")]
     [Theory]
     public async Task FormDFileSystem_Directory_Should_Be_Normalized_To_FormC_NonRecursive(string directoryPath)
     {
@@ -34,10 +34,12 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
 
         FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
 
+        var t = new CancellationTokenSource();
+
         // Act
         var c = targetParser.ParseWithErrorHandling([directoryPath, "-q"]);
 
-        var r = await c!.RunAsync(fixture.FileSystem);
+        var r = await c!.RunAsync(fixture.FileSystem, t.Token);
 
         // Assertion
         foreach (var f in fixture.FileSystem!.Directory.GetFiles(directoryPath))
@@ -65,10 +67,12 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
 
         FileSystemFixtureHelpers.ShowFilesInFileSystem(fixture, _output);
 
+        var t = new CancellationTokenSource();
+
         // Act
         var c = targetParser.ParseWithErrorHandling([rootPath, "-q", "-r"]);
 
-        var r = await c!.RunAsync(fixture.FileSystem);
+        var r = await c!.RunAsync(fixture.FileSystem, t.Token);
 
         // Assertion
         foreach (var f in fixture.FileSystem!.Directory.GetFiles(rootPath, "", SearchOption.AllDirectories))
@@ -79,8 +83,8 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
         }
     }
 
-    [InlineData(".\\어린양.txt")]
-    [InlineData(".\\Western\\Áçčèñţşůşîñģdïäçřïţïçš.txt")]
+    [InlineData("./어린양.txt")]
+    [InlineData("./Western/Áçčèñţşůşîñģdïäçřïţïçš.txt")]
     [Theory]
     public async Task FormDFileSystem_File_Should_Be_Normalized_To_FormC(string filePath)
     {
@@ -93,10 +97,12 @@ public class FormDNormalizationTests : IClassFixture<FileSystemFixture>
 
         var originalFilename = FileSystemFixtureHelpers.NormalizePathFilenameOnly(fixture, filePath, NormalizationForm.FormD);
 
+        var t = new CancellationTokenSource();
+
         // Act
         var c = targetParser.ParseWithErrorHandling([originalFilename, "-q"]);
 
-        var r = await c!.RunAsync(fixture.FileSystem);
+        var r = await c!.RunAsync(fixture.FileSystem, t.Token);
 
         // Assertion
         var filename = fixture.FileSystem!.Path.GetFileName(filePath);

@@ -4,6 +4,7 @@ using Spectre.Console;
 using System;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 
 namespace FixNormalization.Arguments;
 
@@ -11,7 +12,7 @@ namespace FixNormalization.Arguments;
 [Description("Fix Unicode normalization of filenames.")]
 internal sealed partial class RootArguments
 {
-    [CommandLineArgument(IsPositional = true, CancelParsing = CancelMode.Success)]
+    [CommandLineArgument(IsPositional = true)]
     [Description("Commands of fnorm.")]
     public required string Command { get; set; }
 
@@ -22,6 +23,11 @@ internal sealed partial class RootArguments
     [CommandLineArgument]
     [Description("Display version information.")]
     public static CancelMode Version(CommandLineParser parser)
+    {
+        return ShowVersion(parser);
+    }
+
+    public static CancelMode ShowVersion(CommandLineParser parser)
     {
         var assembly = Assembly.GetExecutingAssembly();
 
@@ -48,10 +54,32 @@ internal sealed partial class RootArguments
         AnsiConsole.MarkupLine($"[bold yellow]{appName}[/] {version.EscapeMarkup()}");
     }
 
+    public static string GetGitCommitInformation(LocalizedStringProvider stringProvider, Assembly assembly)
+    {
+        var stringBuilder = new StringBuilder();
+
+        var attrs = assembly.GetCustomAttributes<AssemblyMetadataAttribute>();
+
+        var sha = attrs
+                            .FirstOrDefault(a => a.Key == "GitCommitSha")?
+                            .Value ?? "Unknown";
+        var branch = attrs.FirstOrDefault(a => a.Key == "GitBranch")?.Value ?? "Unknown";
+        var date = attrs
+                            .FirstOrDefault(a => a.Key == "GitCommitDate")?
+                            .Value ?? "Unknown";
+        if (sha != "Unknown" && date != "Unknown")
+        {
+            return stringBuilder.Append($"{sha}-{branch} ({date})")
+                .ToString();
+        }
+
+        return string.Empty;
+    }
+
     private static string GetAppVersion(Assembly assembly)
     {
-        var versionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-        var version = versionAttribute?.InformationalVersion ?? assembly.GetName()?.Version?.ToString() ?? string.Empty;
+        var versionAttribute = assembly.GetCustomAttributes<AssemblyMetadataAttribute>();
+        var version = versionAttribute?.FirstOrDefault(a => a.Key == "SemVer")?.Value ?? assembly.GetName()?.Version?.ToString() ?? string.Empty;
 
         return version;
     }

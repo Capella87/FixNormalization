@@ -23,16 +23,6 @@ internal sealed partial class VersionCommand : ICommand
 
     public int Run()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        var appName = _parser.ApplicationFriendlyName;
-
-        if (assembly is null)
-        {
-            AnsiConsole.MarkupLine($"[yellow bold]{appName}[/] Unknown version");
-            return (int)CancelMode.Abort;
-        }
-        RootArguments.ShowRichVersionInformation(_parser.StringProvider, assembly, appName);
-
-        return (int)CancelMode.Abort;
+        return (int)RootArguments.ShowVersion(_parser);
     }
 }

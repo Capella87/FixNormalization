@@ -20,7 +20,7 @@ public static class Program
             IncludeAliasInDescription = true,
             IncludeApplicationDescriptionBeforeCommandList = true,
             IncludeApplicationDescription = true,
-            IncludeCommandHelpInstruction = true,
+            IncludeCommandHelpInstruction = TriState.True,
         };
 
         // For subcommands

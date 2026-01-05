@@ -2,6 +2,7 @@ using Ookii.CommandLine;
 using System.Text;
 using Spectre.Console;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace FixNormalization.Arguments;
 
@@ -16,11 +17,12 @@ internal sealed partial class RootArguments
                 .LeftJustified()
                 .Color(Color.GreenYellow));
         Version(parser);
-        Console.WriteLine('\n');
-        AnsiConsole.MarkupLine($"Copyright (c) 2024-2025 Capella87.");
+        AnsiConsole.MarkupLine(GetGitCommitInformation(parser.StringProvider, Assembly.GetExecutingAssembly()));
+        AnsiConsole.MarkupLine($"\nCopyright (c) 2024-2026 Capella87.");
         AnsiConsole.MarkupLine("Distributed under MIT License.");
         AnsiConsole.MarkupLine("Repository: https://github.com/Capella87/FixNormalization");
 
+        // Known Issue: CancelMode.Success will invoke the usage help
         return CancelMode.Abort;
     }
 }
