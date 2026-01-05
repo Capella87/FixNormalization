@@ -21,6 +21,19 @@
         <PackageReference Include="Spectre.Console" Version="0.50.0" />
         <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.0.15" />
         <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.0.15" />
+        <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
+            <PrivateAssets>All</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
+
+    <Target Name="AddGitMetadata" BeforeTargets="GetAssemblyVersion">
+        <ItemGroup>
+            <AssemblyMetadata Include="GitCommitSha" Value="$(GitVersion_ShortSha)" />
+            <AssemblyMetadata Include="GitBranch" Value="$(GitVersion_BranchName)" />
+            <AssemblyMetadata Include="GitCommitDate" Value="$(GitVersion_CommitDate)" />
+            <AssemblyMetadata Include="SemVer" Value="$(GitVersion_SemVer)" />
+        </ItemGroup>
+    </Target>
 
 </Project>

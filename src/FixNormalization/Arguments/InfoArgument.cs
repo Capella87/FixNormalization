@@ -16,6 +16,7 @@ internal sealed partial class RootArguments
                 .LeftJustified()
                 .Color(Color.GreenYellow));
         Version(parser);
+        AnsiConsole.MarkupLine(GetGitCommitInformation(parser.StringProvider, Assembly.GetExecutingAssembly()));
         Console.WriteLine('\n');
         AnsiConsole.MarkupLine($"Copyright (c) 2024-2025 Capella87.");
         AnsiConsole.MarkupLine("Distributed under MIT License.");
