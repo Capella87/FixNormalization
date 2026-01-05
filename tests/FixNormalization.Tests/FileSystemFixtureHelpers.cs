@@ -63,7 +63,7 @@ public static class FileSystemFixtureHelpers
 
     public static string NormalizePathFilenameOnly(FileSystemFixture fixture, string path, NormalizationForm form)
     {
-        var filenameSeparatorIdx = path.LastIndexOf(fixture.FileSystem!.Path.DirectorySeparatorChar);
+        var filenameSeparatorIdx = path.LastIndexOf('/');
         return fixture.FileSystem!.Path.Combine(path.Substring(0, filenameSeparatorIdx), fixture.FileSystem!.Path.GetFileName(path).Normalize(form));
     }
 
