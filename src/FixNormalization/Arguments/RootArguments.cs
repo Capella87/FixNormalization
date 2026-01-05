@@ -12,7 +12,7 @@ namespace FixNormalization.Arguments;
 [Description("Fix Unicode normalization of filenames.")]
 internal sealed partial class RootArguments
 {
-    [CommandLineArgument(IsPositional = true)]
+    [CommandLineArgument(IsPositional = true, CancelParsing = CancelMode.Success)]
     [Description("Commands of fnorm.")]
     public required string Command { get; set; }
 
