@@ -1,10 +1,8 @@
 mode: ManualDeployment
-next-version: 0.2.0
+assembly-versioning-scheme: MajorMinorPatchTag
 branches:
-  main:
+  master:
     increment: None
-  develop:
-    increment: None
-  feature:
-    increment: None
-workflow:  
+    label: ''
+    regex: ^master$|^main$
+    is-main-branch: true
