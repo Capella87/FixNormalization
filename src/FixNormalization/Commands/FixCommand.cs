@@ -109,8 +109,8 @@ public partial class FixCommand : AsyncCommandBase
 
         if (targetedFiles.Count == 0)
         {
-            AnsiConsole.MarkupLine($"[red]Error: there's no such valid file to normalize.[/]");
-            return 22;
+            AnsiConsole.MarkupLine($"[bold]Info[/]: there's no such file or directory to normalize.");
+            return 0;
         }
 
         var failed = new List<string>();
