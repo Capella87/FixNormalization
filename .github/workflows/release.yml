@@ -56,6 +56,7 @@ jobs:
         run: dotnet publish ./src/FixNormalization -c Release -o ${{ env.release-directory }} -r ${{ matrix.architecture }} --self-contained -v normal
 
       - name: Remove Unnecessary Files
+        shell: pwsh
         run: |
           pushd
           cd ${{ github.workspace }}/pub/${{ matrix.architecture }}
