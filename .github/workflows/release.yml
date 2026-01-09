@@ -11,17 +11,25 @@ on:
 
 jobs:
   publish:
-    runs-on: [windows-latest]
     permissions:
       contents: write
       discussions: write
     strategy:
       matrix:
-        architecture:
-          - win-x64
-          - win-arm64
-          - linux-x64
-          - linux-arm64
+        include:
+          - architecture: win-x64
+            os: windows-latest
+          - architecture: win-arm64
+            os: windows-latest
+          - architecture: linux-x64
+            os: ubuntu-latest
+          - architecture: linux-arm64
+            os: ubuntu-latest
+          - architecture: osx-arm64
+            os: macos-26
+          - architecture: osx-arm64
+            os: macos-15
+    runs-on: ${{ matrix.os }}
     env:
       release: 'fnorm-${{ github.ref_name }}-${{ matrix.architecture }}'
       release-directory: '${{ github.workspace }}/pub/${{ matrix.architecture }}'
@@ -59,7 +67,7 @@ jobs:
         run: cp ${{ github.workspace }}/README.md ${{ env.release-directory }} && cp ${{ github.workspace }}/LICENSE ${{ env.release-directory }}
 
       - name: Create Archives
-        uses: thedoctor0/zip-release@0.7.5
+        uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           filename: '${{ env.release }}.zip'
