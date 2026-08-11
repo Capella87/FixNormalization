@@ -18,11 +18,11 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.*" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.*" />
         <PackageReference Include="Ookii.CommandLine" Version="5.0.0" />
-        <PackageReference Include="Spectre.Console" Version="0.54.0" />
-        <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.1.0" />
-        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.1.0" />
-        <PackageReference Include="GitVersion.MsBuild" Version="6.5.1">
-            <PrivateAssets>All</PrivateAssets>
+        <PackageReference Include="Spectre.Console" Version="0.57.2" />
+        <PackageReference Include="TestableIO.System.IO.Abstractions" Version="22.2.0" />
+        <PackageReference Include="TestableIO.System.IO.Abstractions.Wrappers" Version="22.2.0" />
+        <PackageReference Include="GitVersion.MsBuild" Version="6.8.2">
+            <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
     </ItemGroup>
