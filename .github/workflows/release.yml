@@ -72,12 +72,11 @@ jobs:
         run: cp ${{ github.workspace }}/README.md ${{ env.release-directory }} && cp ${{ github.workspace }}/LICENSE ${{ env.release-directory }}
 
       - name: Create Archives
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: '${{ env.release }}.zip'
-          directory: ${{ env.archive-directory }}
-          path: ${{ env.release-directory }}
+        shell: pwsh
+        run: |
+          $zipPath = "${{ env.archive-directory }}/${{ env.release }}.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
+          Compress-Archive -Path "${{ env.release-directory }}/*" -DestinationPath $zipPath -Force
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
