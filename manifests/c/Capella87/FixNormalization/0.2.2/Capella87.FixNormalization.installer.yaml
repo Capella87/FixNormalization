@@ -2,16 +2,16 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.12.0.schema.json
 
 PackageIdentifier: Capella87.FixNormalization
-PackageVersion: 0.2.2
+PackageVersion: 0.2.3
 InstallerType: zip
 NestedInstallerType: portable
 ArchiveBinariesDependOnPath: true
 Installers:
 - Architecture: x64
   NestedInstallerFiles:
-  - RelativeFilePath: win-x64\fnorm.exe
-  InstallerUrl: https://github.com/Capella87/FixNormalization/releases/download/v0.2.2/fnorm-v0.2.2-win-x64.zip
-  InstallerSha256: DCD7F80F0E3EB86E2A5BC10FD9D6B100D46942EA9DB221D6AF3019876F2B82F9
+  - RelativeFilePath: fnorm.exe
+  InstallerUrl: https://github.com/Capella87/FixNormalization/releases/download/v0.2.3/fnorm-v0.2.3-win-x64.zip
+  InstallerSha256: cdf59a62c5c9e603e168d8b2259abe8394b258935017824071426c4d41457f21
   Commands:
     - fnorm
   Dependencies:
@@ -20,9 +20,9 @@ Installers:
         MinimumVersion: 10.0.0
 - Architecture: arm64
   NestedInstallerFiles:
-  - RelativeFilePath: win-arm64\fnorm.exe
-  InstallerUrl: https://github.com/Capella87/FixNormalization/releases/download/v0.2.2/fnorm-v0.2.2-win-arm64.zip
-  InstallerSha256: 5883B5DDBA85F879C2004A58441B96721CFF3D7C900F10D24AF8E6D7BA7D0C15
+  - RelativeFilePath: fnorm.exe
+  InstallerUrl: https://github.com/Capella87/FixNormalization/releases/download/v0.2.3/fnorm-v0.2.3-win-arm64.zip
+  InstallerSha256: e8ccf2985c139b386f31b0ba94269f8cb4d5ee800a120a9d5cda7d504fb94d37
   Commands:
     - fnorm
   Dependencies:
