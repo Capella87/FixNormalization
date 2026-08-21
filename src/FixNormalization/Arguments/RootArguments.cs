@@ -69,7 +69,7 @@ internal sealed partial class RootArguments
                             .Value ?? "Unknown";
         if (sha != "Unknown" && date != "Unknown")
         {
-            return stringBuilder.Append($"{sha}-{branch} ({date})")
+            return stringBuilder.Append($"{branch}-{sha} ({date})")
                 .ToString();
         }
 
