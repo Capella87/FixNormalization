@@ -1,0 +1,124 @@
+================================
+Third Party Notice
+================================
+
+This software includes third-party components that are subject to the following license terms:
+To be simplified, the license terms of the third-party components are not included in this software. Please refer to the license terms of each third-party component for details.
+See https://spdx.org/licenses/ for each license term in detail.
+
+================================
+
+
+================================
+FixNormalization
+================================
+This software includes the following third-party components:
+
+SPDX Package Summary:
+
+* GitVersion.MsBuild
+  PackageVersion: 6.8.2
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/GitTools/GitVersion
+  CopyrightText: Copyright GitTools 2026.
+  Supplier: GitTools and Contributors
+
+* Microsoft.Extensions.Configuration
+  PackageVersion: 10.0.11
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://dot.net/
+  CopyrightText: © Microsoft Corporation. All rights reserved.
+  Supplier: Microsoft
+
+* Microsoft.Extensions.Configuration.Abstractions
+  PackageVersion: 10.0.11
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://dot.net/
+  CopyrightText: © Microsoft Corporation. All rights reserved.
+  Supplier: Microsoft
+
+* Microsoft.Extensions.Configuration.Json
+  PackageVersion: 10.0.11
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://dot.net/
+  CopyrightText: © Microsoft Corporation. All rights reserved.
+  Supplier: Microsoft
+
+* Ookii.CommandLine
+  PackageVersion: 5.0.0
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/SvenGroot/Ookii.CommandLine
+  CopyrightText: Copyright (c) Sven Groot (Ookii.org)
+  Supplier: Sven Groot
+
+* Spectre.Console
+  PackageVersion: 0.57.2
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/spectreconsole/spectre.console
+  CopyrightText: Patrik Svensson, Phil Scott, Nils Andresen, Cédric Luthi
+  Supplier: Patrik Svensson, Phil Scott, Nils Andresen, Cédric Luthi
+
+* TestableIO.System.IO.Abstractions
+  PackageVersion: 22.2.0
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/TestableIO/System.IO.Abstractions
+  CopyrightText: Copyright © Tatham Oddie & friends 2010-2026
+  Supplier: Tatham Oddie & friends
+
+* TestableIO.System.IO.Abstractions.Wrappers
+  PackageVersion: 22.2.0
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/TestableIO/System.IO.Abstractions
+  CopyrightText: Copyright © Tatham Oddie & friends 2010-2026
+  Supplier: Tatham Oddie & friends
+
+================================
+FixNormalization.Tests
+================================
+This software includes the following third-party components:
+
+SPDX Package Summary:
+
+* coverlet.collector
+  PackageVersion: 6.0.4
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/coverlet-coverage/coverlet
+  CopyrightText: N/A
+  Supplier: tonerdo
+
+* Microsoft.NET.Test.Sdk
+  PackageVersion: 18.0.1
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/microsoft/vstest
+  CopyrightText: © Microsoft Corporation. All rights reserved.
+  Supplier: Microsoft
+
+* NSubstitute
+  PackageVersion: 5.3.0
+  SPDX-License-Identifier: BSD-3-Clause
+  PackageDownloadLocation: https://nsubstitute.github.io/
+  CopyrightText: N/A
+  Supplier: Anthony Egerton, David Tchepak, Alexandr Nikitin, Oleksandr Povar
+
+* TestableIO.System.IO.Abstractions.TestingHelpers
+  PackageVersion: 22.1.0
+  SPDX-License-Identifier: MIT
+  PackageDownloadLocation: https://github.com/TestableIO/System.IO.Abstractions
+  CopyrightText: Copyright © Tatham Oddie & friends 2010-2025
+  Supplier: Tatham Oddie & friends
+
+* xunit
+  PackageVersion: 2.9.3
+  SPDX-License-Identifier: Apache-2.0
+  PackageDownloadLocation: https://github.com/xunit/xunit
+  CopyrightText: Copyright (C) .NET Foundation
+  Supplier: jnewkirk, bradwilson
+
+* xunit.runner.visualstudio
+  PackageVersion: 3.1.5
+  SPDX-License-Identifier: Apache-2.0
+  PackageDownloadLocation: https://github.com/xunit/xunit
+  CopyrightText: Copyright (C) .NET Foundation
+  Supplier: jnewkirk, bradwilson
+
+Thank you for your proud and VALUABLE contributions to the community!
