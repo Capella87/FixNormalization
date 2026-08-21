@@ -47,11 +47,19 @@ Make sure that you must add capella-bucket to local scoop bucket list.
 scoop add capella-bucket https://github.com/Capella87/capella-bucket
 ```
 
-Then, 
+Then,
 
 ```shell
 scoop install capella-bucket/fnorm
 ```
+
+### Homebrew
+You can install FixNormalization in macOS and Linux with [Homebrew](https://brew.sh) and my custom tap, [capellatap](https://github.com/Capella87/homebrew-capellatap).
+
+```shell
+brew install capella87/homebrew-capellatap/fnorm
+```
+My capellatap will be automatically added and the program will be installed in your computer.
 
 
 ## Usage
